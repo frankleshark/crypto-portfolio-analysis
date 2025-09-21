@@ -11,7 +11,7 @@ const ChartsSection: React.FC = () => {
         </div>
         <div className="p-4">
           <img 
-            src="reports/cumulative_returns.png" 
+            src="/reports/efficient_frontier.png" 
             alt="Cumulative Returns Chart"
             className="w-full h-auto rounded border border-slate-700"
             onError={(e) => {

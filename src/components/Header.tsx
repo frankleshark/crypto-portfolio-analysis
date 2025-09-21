@@ -6,10 +6,10 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">
-            Cryptocurrency Portfolio Analysis
+            NX8 Portfolio Analysis
           </h1>
           <p className="text-sm text-gray-400 mt-1">
-            Equal-Weight Index | Nov 2024 - Sep 2025
+            Equal-Weight Index | Jan 2025 - Sep 2025
           </p>
         </div>
         <div className="text-right">

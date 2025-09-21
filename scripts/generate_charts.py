@@ -76,7 +76,7 @@ def create_cumulative_returns_chart(price_data, returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('reports/cumulative_returns.png', 
+    plt.savefig('/home/project/public/reports/cumulative_returns.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -98,7 +98,7 @@ def create_portfolio_drawdown_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('reports/portfolio_drawdown.png', 
+    plt.savefig('/home/project/public/reports/portfolio_drawdown.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -124,7 +124,7 @@ def create_return_distribution_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('reports/return_distribution.png', 
+    plt.savefig('/home/project/public/reports/return_distribution.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -144,7 +144,7 @@ def create_correlation_matrix_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('reports/correlation_matrix.png', 
+    plt.savefig('/home/project/public/reports/correlation_matrix.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -173,7 +173,7 @@ def create_strategy_weights_chart():
         ax.grid(True, alpha=0.3, color='#475569', axis='y')
         
         plt.tight_layout()
-        plt.savefig('reports/strategy_weights.png', 
+        plt.savefig('/home/project/public/reports/strategy_weights.png', 
                     dpi=300, bbox_inches='tight', facecolor='#0F172A')
         plt.close()
         

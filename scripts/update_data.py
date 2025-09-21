@@ -43,7 +43,7 @@ def main():
     
     # Ensure directories exist
     os.makedirs('data', exist_ok=True)
-    os.makedirs('reports', exist_ok=True)
+    os.makedirs('/home/project/public/reports', exist_ok=True)
     
     # Define the pipeline steps
     pipeline_steps = [
