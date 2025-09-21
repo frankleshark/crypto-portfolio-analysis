@@ -7,13 +7,16 @@ Fetches historical price data for 8 cryptocurrencies from CoinGecko API
 import requests
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import time
 import json
 
 # Configuration
 API_KEY = "CG-P48dvmsF8VwaAR68yt274Dvu"
 BASE_URL = "https://api.coingecko.com/api/v3"
+
+# Portfolio start date configuration
+PORTFOLIO_START_DATE = date(2025, 1, 1)  # January 1, 2025
 
 # Cryptocurrency mapping: Symbol -> CoinGecko ID
 CRYPTO_MAPPING = {
@@ -27,19 +30,26 @@ CRYPTO_MAPPING = {
     'SUI': 'sui'
 }
 
-def fetch_crypto_data(coin_id, vs_currency='usd', days=365, interval='daily'):
+def fetch_crypto_data(coin_id, vs_currency='usd', days=None, interval='daily'):
     """
     Fetch historical price data for a single cryptocurrency from CoinGecko API
     
     Args:
         coin_id (str): CoinGecko coin ID
         vs_currency (str): Target currency (default: 'usd')
-        days (int): Number of days of data (default: 270)
+        days (int): Number of days of data (calculated from PORTFOLIO_START_DATE if None)
         interval (str): Data interval (default: 'daily')
     
     Returns:
         dict: API response containing prices, market_caps, and total_volumes
     """
+    # Calculate days from portfolio start date if not provided
+    if days is None:
+        today = date.today()
+        days_since_start = (today - PORTFOLIO_START_DATE).days
+        days = max(days_since_start, 1)  # Ensure at least 1 day
+        print(f"Calculated {days} days from portfolio start date ({PORTFOLIO_START_DATE})")
+    
     url = f"{BASE_URL}/coins/{coin_id}/market_chart"
     
     params = {
@@ -111,7 +121,7 @@ def fetch_all_crypto_data():
             time.sleep(1)
         
         # Fetch raw data
-        raw_data = fetch_crypto_data(coin_id, days=270)  # ~9 months from Jan 1, 2025
+        raw_data = fetch_crypto_data(coin_id)  # Uses PORTFOLIO_START_DATE automatically
         
         if raw_data:
             # Process data
@@ -131,6 +141,12 @@ def fetch_all_crypto_data():
     
     # Remove any remaining NaN values at the beginning
     all_data = all_data.dropna()
+    
+    # Filter data to start from portfolio start date
+    portfolio_start_datetime = pd.Timestamp(PORTFOLIO_START_DATE)
+    if not all_data.empty and all_data.index[0] < portfolio_start_datetime:
+        all_data = all_data[all_data.index >= portfolio_start_datetime]
+        print(f"Filtered data to start from portfolio start date: {PORTFOLIO_START_DATE}")
     
     print(f"\nData collection complete!")
     print(f"Date range: {all_data.index[0]} to {all_data.index[-1]}")

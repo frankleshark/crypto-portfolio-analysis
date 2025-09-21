@@ -9,12 +9,12 @@ const Header: React.FC = () => {
             NX8 Portfolio Analysis
           </h1>
           <p className="text-sm text-gray-400 mt-1">
-            Equal-Weight Index | Jan 2025 - Sep 2025
+            Equal-Weight Index | 01 Jan 2025 - 21 Sep 2025
           </p>
         </div>
         <div className="text-right">
           <div className="text-sm text-gray-400">Last Updated</div>
-          <div className="text-sm text-white">Sep 21, 2025</div>
+          <div className="text-sm text-white">21 Sep 2025</div>
         </div>
       </div>
     </div>
