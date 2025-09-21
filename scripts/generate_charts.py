@@ -1,37 +1,26 @@
 #!/usr/bin/env python3
 """
-Enhanced Chart Generation with Custom Color Palette
-Generates specific charts for the dashboard with professional styling
+Chart Generation Using Quantstats Library
+Generates individual chart images using quantstats plotting functions
 """
 
 import pandas as pd
 import numpy as np
+import quantstats as qs
 import matplotlib.pyplot as plt
 import seaborn as sns
-import quantstats as qs
-from datetime import datetime
+import os
 import warnings
 warnings.filterwarnings('ignore')
 
-# Custom Color Palette from the provided image
-COLORS = {
-    'yellow': '#FEF08A',      # Light yellow
-    'orange': '#FB923C',      # Orange
-    'red': '#F87171',         # Light red
-    'purple': '#A78BFA',      # Light purple
-    'blue': '#60A5FA',        # Light blue
-    'green': '#4ADE80',       # Light green
-    'teal': '#2DD4BF',        # Teal
-    'dark_purple': '#7C3AED', # Dark purple
-    'dark_blue': '#2563EB',   # Dark blue
-    'dark_green': '#059669',  # Dark green
-}
+# Set matplotlib backend for headless environment
+import matplotlib
+matplotlib.use('Agg')
 
-# Set professional style
-plt.style.use('dark_background')
-sns.set_palette([COLORS['blue'], COLORS['green'], COLORS['purple'], 
-                COLORS['orange'], COLORS['red'], COLORS['teal'], 
-                COLORS['yellow'], COLORS['dark_purple']])
+def ensure_output_directory():
+    """Ensure the output directory exists"""
+    os.makedirs('public/reports', exist_ok=True)
+    print("✅ Output directory created/verified: public/reports/")
 
 def load_data():
     """Load cryptocurrency price and returns data"""
@@ -46,177 +35,214 @@ def load_data():
         print("Error: data/crypto_prices.csv not found.")
         return None, None
 
-import os
+def create_portfolio_returns(returns_data):
+    """Create equal-weight portfolio returns"""
+    # Equal weight: 1/n for each cryptocurrency
+    weights = np.array([1/len(returns_data.columns)] * len(returns_data.columns))
+    portfolio_returns = returns_data.dot(weights)
+    return portfolio_returns
 
-def ensure_output_directory():
-    """Ensure the output directory exists"""
-    os.makedirs('public/reports', exist_ok=True)
-    print("✅ Output directory created/verified: public/reports/")
-
-def create_cumulative_returns_chart(price_data, returns_data):
-    """Generate cumulative returns chart"""
-    fig, ax = plt.subplots(figsize=(14, 8))
-    fig.patch.set_facecolor('#0F172A')
-    ax.set_facecolor('#1E293B')
-    
-    # Calculate portfolio returns (equal weight)
-    portfolio_returns = returns_data.mean(axis=1)
-    portfolio_cumulative = (1 + portfolio_returns).cumprod()
-    
-    # Plot portfolio
-    ax.plot(portfolio_cumulative.index, portfolio_cumulative.values, 
-            linewidth=3, label='Equal Weight Portfolio', color=COLORS['green'])
-    
-    # Plot top performers
-    top_assets = ['HYPE', 'BNB', 'ETH', 'TRON']
-    colors = [COLORS['yellow'], COLORS['blue'], COLORS['purple'], COLORS['orange']]
-    
-    for i, asset in enumerate(top_assets):
-        if asset in returns_data.columns:
-            cumulative = (1 + returns_data[asset]).cumprod()
-            ax.plot(cumulative.index, cumulative.values, 
-                   alpha=0.8, label=asset, color=colors[i], linewidth=2)
-    
-    ax.set_title('Cumulative Returns: Portfolio vs Top Assets', 
-                fontsize=16, fontweight='bold', color='white', pad=20)
-    ax.set_ylabel('Cumulative Return', fontsize=12, color='white')
-    ax.legend(loc='upper left', frameon=True, facecolor='#334155', edgecolor='#475569')
-    ax.grid(True, alpha=0.3, color='#475569')
-    ax.tick_params(colors='white')
-    
-    plt.tight_layout()
-    plt.savefig('public/reports/cumulative_returns.png', 
-                dpi=300, bbox_inches='tight', facecolor='#0F172A')
-    plt.close()
-
-def create_portfolio_drawdown_chart(returns_data):
-    """Generate portfolio drawdown chart"""
-    fig, ax = plt.subplots(figsize=(12, 6))
-    fig.patch.set_facecolor('#0F172A')
-    ax.set_facecolor('#1E293B')
-    
-    portfolio_returns = returns_data.mean(axis=1)
-    drawdowns = qs.stats.to_drawdown_series(portfolio_returns)
-    
-    ax.fill_between(drawdowns.index, drawdowns, 0, alpha=0.7, color=COLORS['red'])
-    ax.plot(drawdowns.index, drawdowns, color=COLORS['red'], linewidth=2)
-    
-    ax.set_title('Portfolio Drawdowns', fontsize=16, fontweight='bold', color='white', pad=20)
-    ax.set_ylabel('Drawdown', fontsize=12, color='white')
-    ax.grid(True, alpha=0.3, color='#475569')
-    ax.tick_params(colors='white')
-    
-    plt.tight_layout()
-    plt.savefig('public/reports/portfolio_drawdown.png', 
-                dpi=300, bbox_inches='tight', facecolor='#0F172A')
-    plt.close()
-
-def create_return_distribution_chart(returns_data):
-    """Generate return distribution histogram"""
-    fig, ax = plt.subplots(figsize=(10, 6))
-    fig.patch.set_facecolor('#0F172A')
-    ax.set_facecolor('#1E293B')
-    
-    portfolio_returns = returns_data.mean(axis=1)
-    
-    ax.hist(portfolio_returns, bins=50, alpha=0.7, color=COLORS['blue'], edgecolor='white')
-    ax.axvline(portfolio_returns.mean(), color=COLORS['green'], linestyle='--', 
-               linewidth=2, label=f'Mean: {portfolio_returns.mean():.2%}')
-    ax.axvline(portfolio_returns.median(), color=COLORS['yellow'], linestyle='--', 
-               linewidth=2, label=f'Median: {portfolio_returns.median():.2%}')
-    
-    ax.set_title('Portfolio Returns Distribution', fontsize=16, fontweight='bold', color='white', pad=20)
-    ax.set_xlabel('Daily Return', fontsize=12, color='white')
-    ax.set_ylabel('Frequency', fontsize=12, color='white')
-    ax.legend(frameon=True, facecolor='#334155', edgecolor='#475569')
-    ax.grid(True, alpha=0.3, color='#475569')
-    ax.tick_params(colors='white')
-    
-    plt.tight_layout()
-    plt.savefig('public/reports/return_distribution.png', 
-                dpi=300, bbox_inches='tight', facecolor='#0F172A')
-    plt.close()
-
-def create_correlation_matrix_chart(returns_data):
-    """Generate correlation matrix heatmap"""
-    fig, ax = plt.subplots(figsize=(10, 8))
-    fig.patch.set_facecolor('#0F172A')
-    
-    correlation_matrix = returns_data.corr()
-    
-    sns.heatmap(correlation_matrix, annot=True, cmap='RdYlBu_r', center=0, 
-                square=True, ax=ax, fmt='.2f', cbar_kws={'shrink': 0.8},
-                annot_kws={'color': 'white'})
-    
-    ax.set_title('Cryptocurrency Correlation Matrix', fontsize=16, fontweight='bold', 
-                color='white', pad=20)
-    ax.tick_params(colors='white')
-    
-    plt.tight_layout()
-    plt.savefig('public/reports/correlation_matrix.png', 
-                dpi=300, bbox_inches='tight', facecolor='#0F172A')
-    plt.close()
-
-def create_strategy_weights_chart():
-    """Generate strategy weights comparison"""
+def generate_cumulative_returns_chart(portfolio_returns, returns_data):
+    """Generate cumulative returns chart using quantstats"""
     try:
-        weights_df = pd.read_csv('data/portfolio_weights_comparison.csv', 
-                                index_col=0)
-        
+        # Create the plot
         fig, ax = plt.subplots(figsize=(12, 8))
-        fig.patch.set_facecolor('#0F172A')
-        ax.set_facecolor('#1E293B')
         
-        weights_df.T.plot(kind='bar', stacked=True, ax=ax, width=0.8, 
-                         color=[COLORS['blue'], COLORS['green'], COLORS['purple'], 
-                               COLORS['orange'], COLORS['red'], COLORS['teal'], 
-                               COLORS['yellow'], COLORS['dark_purple']])
+        # Plot portfolio cumulative returns
+        qs.plots.returns(portfolio_returns, ax=ax, savefig=False)
         
-        ax.set_title('Portfolio Allocation by Strategy', fontsize=16, fontweight='bold', 
-                    color='white', pad=20)
-        ax.set_ylabel('Weight', fontsize=12, color='white')
-        ax.set_xlabel('Strategy', fontsize=12, color='white')
-        ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', frameon=True, 
-                 facecolor='#334155', edgecolor='#475569')
-        ax.tick_params(colors='white', rotation=45)
-        ax.grid(True, alpha=0.3, color='#475569', axis='y')
+        # Customize the plot
+        ax.set_title('Portfolio Cumulative Returns', fontsize=16, fontweight='bold')
+        ax.set_ylabel('Cumulative Returns')
+        ax.grid(True, alpha=0.3)
         
         plt.tight_layout()
-        plt.savefig('public/reports/strategy_weights.png', 
-                    dpi=300, bbox_inches='tight', facecolor='#0F172A')
+        plt.savefig('public/reports/cumulative_returns.png', dpi=300, bbox_inches='tight')
         plt.close()
+        print("✅ Cumulative returns chart generated")
         
-    except FileNotFoundError:
-        print("Strategy weights file not found, skipping...")
+    except Exception as e:
+        print(f"❌ Error generating cumulative returns chart: {e}")
+
+def generate_drawdown_chart(portfolio_returns):
+    """Generate drawdown chart using quantstats"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(12, 6))
+        
+        # Plot drawdowns
+        qs.plots.drawdown(portfolio_returns, ax=ax, savefig=False)
+        
+        # Customize the plot
+        ax.set_title('Portfolio Drawdowns', fontsize=16, fontweight='bold')
+        ax.set_ylabel('Drawdown')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/portfolio_drawdown.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Portfolio drawdown chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating drawdown chart: {e}")
+
+def generate_returns_distribution_chart(portfolio_returns):
+    """Generate returns distribution chart using quantstats"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot distribution
+        qs.plots.histogram(portfolio_returns, ax=ax, savefig=False)
+        
+        # Customize the plot
+        ax.set_title('Portfolio Returns Distribution', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Daily Returns')
+        ax.set_ylabel('Frequency')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/return_distribution.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Return distribution chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating return distribution chart: {e}")
+
+def generate_rolling_metrics_chart(portfolio_returns):
+    """Generate rolling metrics chart using quantstats"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        # Plot rolling Sharpe ratio
+        qs.plots.rolling_sharpe(portfolio_returns, ax=ax, savefig=False)
+        
+        # Customize the plot
+        ax.set_title('Rolling Sharpe Ratio (6-Month)', fontsize=16, fontweight='bold')
+        ax.set_ylabel('Sharpe Ratio')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/rolling_sharpe.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Rolling Sharpe ratio chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating rolling metrics chart: {e}")
+
+def generate_monthly_heatmap(portfolio_returns):
+    """Generate monthly returns heatmap using quantstats"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        # Plot monthly heatmap
+        qs.plots.monthly_heatmap(portfolio_returns, ax=ax, savefig=False)
+        
+        # Customize the plot
+        ax.set_title('Monthly Returns Heatmap', fontsize=16, fontweight='bold')
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/monthly_heatmap.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Monthly heatmap chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating monthly heatmap: {e}")
+
+def generate_correlation_matrix(returns_data):
+    """Generate correlation matrix heatmap"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(10, 8))
+        
+        # Calculate correlation matrix
+        correlation_matrix = returns_data.corr()
+        
+        # Plot heatmap
+        sns.heatmap(correlation_matrix, annot=True, cmap='RdYlBu_r', center=0, 
+                    square=True, ax=ax, fmt='.2f', cbar_kws={'shrink': 0.8})
+        
+        ax.set_title('Cryptocurrency Correlation Matrix', fontsize=16, fontweight='bold')
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/correlation_matrix.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Correlation matrix chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating correlation matrix: {e}")
+
+def generate_performance_comparison(returns_data):
+    """Generate performance comparison chart"""
+    try:
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(12, 8))
+        
+        # Calculate cumulative returns for each asset
+        cumulative_returns = (1 + returns_data).cumprod()
+        
+        # Plot each asset
+        for column in cumulative_returns.columns:
+            ax.plot(cumulative_returns.index, cumulative_returns[column], 
+                   label=column, alpha=0.8, linewidth=2)
+        
+        # Add portfolio
+        portfolio_returns = returns_data.mean(axis=1)
+        portfolio_cumulative = (1 + portfolio_returns).cumprod()
+        ax.plot(portfolio_cumulative.index, portfolio_cumulative.values, 
+               label='Equal Weight Portfolio', linewidth=3, color='black')
+        
+        ax.set_title('Cumulative Returns: Portfolio vs Individual Assets', 
+                    fontsize=16, fontweight='bold')
+        ax.set_ylabel('Cumulative Returns')
+        ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('public/reports/performance_comparison.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print("✅ Performance comparison chart generated")
+        
+    except Exception as e:
+        print(f"❌ Error generating performance comparison chart: {e}")
 
 def main():
-    """Generate all dashboard charts"""
-    print("Generating dashboard charts with custom color palette...")
+    """Generate all dashboard charts using quantstats"""
+    print("Generating dashboard charts using quantstats library...")
     
     # Ensure output directory exists
     ensure_output_directory()
     
+    # Load data
     price_data, returns_data = load_data()
     if price_data is None or returns_data is None:
+        print("❌ Failed to load data")
         return
     
-    # Generate all charts
-    create_cumulative_returns_chart(price_data, returns_data)
-    print("✅ Cumulative returns chart generated")
+    # Create portfolio returns
+    portfolio_returns = create_portfolio_returns(returns_data)
+    print(f"Created portfolio with {len(returns_data.columns)} assets")
     
-    create_portfolio_drawdown_chart(returns_data)
-    print("✅ Portfolio drawdown chart generated")
+    # Generate all charts using quantstats
+    generate_cumulative_returns_chart(portfolio_returns, returns_data)
+    generate_drawdown_chart(portfolio_returns)
+    generate_returns_distribution_chart(portfolio_returns)
+    generate_rolling_metrics_chart(portfolio_returns)
+    generate_monthly_heatmap(portfolio_returns)
+    generate_correlation_matrix(returns_data)
+    generate_performance_comparison(returns_data)
     
-    create_return_distribution_chart(returns_data)
-    print("✅ Return distribution chart generated")
-    
-    create_correlation_matrix_chart(returns_data)
-    print("✅ Correlation matrix chart generated")
-    
-    create_strategy_weights_chart()
-    print("✅ Strategy weights chart generated")
-    
-    print("\n🎨 All charts generated with custom color palette!")
+    print("\n🎨 All charts generated using quantstats library!")
+    print("Charts saved to public/reports/:")
+    print("  - cumulative_returns.png")
+    print("  - portfolio_drawdown.png") 
+    print("  - return_distribution.png")
+    print("  - rolling_sharpe.png")
+    print("  - monthly_heatmap.png")
+    print("  - correlation_matrix.png")
+    print("  - performance_comparison.png")
 
 if __name__ == "__main__":
     main()
