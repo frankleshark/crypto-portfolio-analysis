@@ -11,9 +11,13 @@ const ChartsSection: React.FC = () => {
         </div>
         <div className="p-4">
           <img 
-            src="/reports/cumulative_returns.png" 
+            src="reports/cumulative_returns.png" 
             alt="Cumulative Returns Chart"
             className="w-full h-auto rounded border border-slate-700"
+            onError={(e) => {
+              console.log('Failed to load cumulative_returns.png');
+              e.currentTarget.style.display = 'none';
+            }}
           />
         </div>
       </div>
@@ -28,9 +32,13 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="/reports/portfolio_drawdown.png" 
+              src="reports/portfolio_drawdown.png" 
               alt="Portfolio Drawdown"
               className="w-full h-auto rounded border border-slate-700"
+              onError={(e) => {
+                console.log('Failed to load portfolio_drawdown.png');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>
@@ -43,9 +51,13 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="/reports/return_distribution.png" 
+              src="reports/return_distribution.png" 
               alt="Return Distribution"
               className="w-full h-auto rounded border border-slate-700"
+              onError={(e) => {
+                console.log('Failed to load return_distribution.png');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>
@@ -61,9 +73,13 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="/reports/correlation_matrix.png" 
+              src="reports/correlation_matrix.png" 
               alt="Correlation Matrix"
               className="w-full h-auto rounded border border-slate-700"
+              onError={(e) => {
+                console.log('Failed to load correlation_matrix.png');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>
@@ -76,9 +92,13 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="/reports/strategy_weights.png" 
+              src="reports/strategy_weights.png" 
               alt="Strategy Weights"
               className="w-full h-auto rounded border border-slate-700"
+              onError={(e) => {
+                console.log('Failed to load strategy_weights.png');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>
@@ -91,9 +111,13 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="/reports/efficient_frontier.png" 
+              src="reports/efficient_frontier.png" 
               alt="Efficient Frontier"
               className="w-full h-auto rounded border border-slate-700"
+              onError={(e) => {
+                console.log('Failed to load efficient_frontier.png');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>

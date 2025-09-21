@@ -36,12 +36,12 @@ sns.set_palette([COLORS['blue'], COLORS['green'], COLORS['purple'],
 def load_data():
     """Load cryptocurrency price and returns data"""
     try:
-        price_data = pd.read_csv('/Users/mfy/crypto-portfolio-analysis/crypto_prices.csv', 
+        price_data = pd.read_csv('data/crypto_prices.csv', 
                                 index_col=0, parse_dates=True)
         returns_data = price_data.pct_change().dropna()
         return price_data, returns_data
     except FileNotFoundError:
-        print("Error: crypto_prices.csv not found.")
+        print("Error: data/crypto_prices.csv not found.")
         return None, None
 
 def create_cumulative_returns_chart(price_data, returns_data):
@@ -76,7 +76,7 @@ def create_cumulative_returns_chart(price_data, returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('/Users/mfy/crypto-portfolio-analysis/reports/cumulative_returns.png', 
+    plt.savefig('reports/cumulative_returns.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -98,7 +98,7 @@ def create_portfolio_drawdown_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('/Users/mfy/crypto-portfolio-analysis/reports/portfolio_drawdown.png', 
+    plt.savefig('reports/portfolio_drawdown.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -124,7 +124,7 @@ def create_return_distribution_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('/Users/mfy/crypto-portfolio-analysis/reports/return_distribution.png', 
+    plt.savefig('reports/return_distribution.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
@@ -144,14 +144,14 @@ def create_correlation_matrix_chart(returns_data):
     ax.tick_params(colors='white')
     
     plt.tight_layout()
-    plt.savefig('/Users/mfy/crypto-portfolio-analysis/reports/correlation_matrix.png', 
+    plt.savefig('reports/correlation_matrix.png', 
                 dpi=300, bbox_inches='tight', facecolor='#0F172A')
     plt.close()
 
 def create_strategy_weights_chart():
     """Generate strategy weights comparison"""
     try:
-        weights_df = pd.read_csv('/Users/mfy/crypto-portfolio-analysis/portfolio_weights_comparison.csv', 
+        weights_df = pd.read_csv('data/portfolio_weights_comparison.csv', 
                                 index_col=0)
         
         fig, ax = plt.subplots(figsize=(12, 8))
@@ -173,7 +173,7 @@ def create_strategy_weights_chart():
         ax.grid(True, alpha=0.3, color='#475569', axis='y')
         
         plt.tight_layout()
-        plt.savefig('/Users/mfy/crypto-portfolio-analysis/reports/strategy_weights.png', 
+        plt.savefig('reports/strategy_weights.png', 
                     dpi=300, bbox_inches='tight', facecolor='#0F172A')
         plt.close()
         
@@ -205,7 +205,7 @@ def main():
     print("✅ Strategy weights chart generated")
     
     print("\n🎨 All charts generated with custom color palette!")
-    print("Charts saved to: /Users/mfy/crypto-portfolio-analysis/reports/")
+    print("Charts saved to: reports/")
 
 if __name__ == "__main__":
     main()

@@ -41,6 +41,10 @@ def main():
     print("🚀 Starting Cryptocurrency Portfolio Data Update Pipeline")
     print(f"⏰ Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
+    # Ensure directories exist
+    os.makedirs('data', exist_ok=True)
+    os.makedirs('reports', exist_ok=True)
+    
     # Define the pipeline steps
     pipeline_steps = [
         ("scripts/fetch_data.py", "Fetching latest cryptocurrency data"),
