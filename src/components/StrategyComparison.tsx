@@ -22,29 +22,29 @@ const StrategyComparison: React.FC = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-700">
-              <th className="text-left py-2 px-4 text-xs font-medium text-gray-400 uppercase tracking-wide">Strategy</th>
-              <th className="text-right py-2 px-4 text-xs font-medium text-gray-400 uppercase tracking-wide">Return</th>
-              <th className="text-right py-2 px-4 text-xs font-medium text-gray-400 uppercase tracking-wide">Sharpe</th>
+              <th className="text-left py-1 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Strategy</th>
+              <th className="text-right py-1 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Return</th>
+              <th className="text-right py-1 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Sharpe</th>
             </tr>
           </thead>
           <tbody>
             {strategies.map((strategy, index) => (
-              <tr key={strategy.name} className={`table-row ${strategy.current ? 'bg-primary/10' : ''}`}>
-                <td className="py-2 px-4">
+              <tr key={strategy.name} className={`table-row ${strategy.current ? 'bg-blue-500/10' : ''}`}>
+                <td className="py-1 px-3">
                   <div className="flex items-center">
                     <span className="text-xs text-gray-500 mr-2">#{index + 1}</span>
                     <div>
-                      <div className={`text-sm font-medium ${strategy.current ? 'text-primary' : 'text-white'}`}>
+                      <div className={`text-xs font-medium ${strategy.current ? 'text-blue-400' : 'text-white'}`}>
                         {strategy.name}
                       </div>
                       <div className="text-xs text-gray-500">{strategy.allocation}</div>
                     </div>
                   </div>
                 </td>
-                <td className="py-2 px-4 text-right text-sm font-medium text-success font-mono">
+                <td className="py-1 px-3 text-right text-xs font-medium text-green-400 font-mono">
                   {strategy.return}
                 </td>
-                <td className="py-2 px-4 text-right text-sm text-gray-300 font-mono">
+                <td className="py-1 px-3 text-right text-xs text-gray-300 font-mono">
                   {strategy.sharpe}
                 </td>
               </tr>

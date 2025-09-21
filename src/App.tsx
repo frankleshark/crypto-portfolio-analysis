@@ -2,8 +2,8 @@ import React from 'react';
 import Header from './components/Header';
 import PortfolioOverview from './components/PortfolioOverview';
 import PerformanceMetrics from './components/PerformanceMetrics';
-import AssetAllocation from './components/AssetAllocation';
 import StrategyComparison from './components/StrategyComparison';
+import ChartsGrid from './components/ChartsGrid';
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
         <Header />
         <PortfolioOverview />
         <PerformanceMetrics />
+        <ChartsGrid />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <AssetAllocation />
           <StrategyComparison />
         </div>
       </div>
