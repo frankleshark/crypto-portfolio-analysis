@@ -36,12 +36,14 @@ sns.set_palette([COLORS['blue'], COLORS['green'], COLORS['purple'],
 def load_data():
     """Load cryptocurrency price and returns data"""
     try:
-        price_data = pd.read_csv('data/crypto_prices.csv', 
+        price_data = pd.read_csv('/home/project/data/crypto_prices.csv', 
                                 index_col=0, parse_dates=True)
         returns_data = price_data.pct_change().dropna()
+        print(f"Loaded data for {len(price_data.columns)} cryptocurrencies")
+        print(f"Date range: {price_data.index[0]} to {price_data.index[-1]}")
         return price_data, returns_data
     except FileNotFoundError:
-        print("Error: data/crypto_prices.csv not found.")
+        print("Error: /home/project/data/crypto_prices.csv not found.")
         return None, None
 
 def create_cumulative_returns_chart(price_data, returns_data):

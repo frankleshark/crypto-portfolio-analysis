@@ -34,7 +34,7 @@ def fetch_crypto_data(coin_id, vs_currency='usd', days=365, interval='daily'):
     Args:
         coin_id (str): CoinGecko coin ID
         vs_currency (str): Target currency (default: 'usd')
-        days (int): Number of days of data (default: 365)
+        days (int): Number of days of data (default: 270)
         interval (str): Data interval (default: 'daily')
     
     Returns:
@@ -111,7 +111,7 @@ def fetch_all_crypto_data():
             time.sleep(1)
         
         # Fetch raw data
-        raw_data = fetch_crypto_data(coin_id)
+        raw_data = fetch_crypto_data(coin_id, days=270)  # ~9 months from Jan 1, 2025
         
         if raw_data:
             # Process data

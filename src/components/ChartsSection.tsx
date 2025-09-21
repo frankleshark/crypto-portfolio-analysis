@@ -11,12 +11,13 @@ const ChartsSection: React.FC = () => {
         </div>
         <div className="p-4">
           <img 
-            src="/reports/efficient_frontier.png" 
+            src="/reports/cumulative_returns.png" 
             alt="Cumulative Returns Chart"
             className="w-full h-auto rounded border border-slate-700"
             onError={(e) => {
               console.log('Failed to load cumulative_returns.png');
-              e.currentTarget.style.display = 'none';
+              // Fallback to efficient frontier if cumulative returns not available
+              e.currentTarget.src = '/reports/efficient_frontier.png';
             }}
           />
         </div>
@@ -32,7 +33,7 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="reports/portfolio_drawdown.png" 
+              src="/reports/portfolio_drawdown.png" 
               alt="Portfolio Drawdown"
               className="w-full h-auto rounded border border-slate-700"
               onError={(e) => {
@@ -51,7 +52,7 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="reports/return_distribution.png" 
+              src="/reports/return_distribution.png" 
               alt="Return Distribution"
               className="w-full h-auto rounded border border-slate-700"
               onError={(e) => {
@@ -73,7 +74,7 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="reports/correlation_matrix.png" 
+              src="/reports/correlation_matrix.png" 
               alt="Correlation Matrix"
               className="w-full h-auto rounded border border-slate-700"
               onError={(e) => {
@@ -92,7 +93,7 @@ const ChartsSection: React.FC = () => {
           </div>
           <div className="p-4">
             <img 
-              src="reports/strategy_weights.png" 
+              src="/reports/strategy_weights.png" 
               alt="Strategy Weights"
               className="w-full h-auto rounded border border-slate-700"
               onError={(e) => {
