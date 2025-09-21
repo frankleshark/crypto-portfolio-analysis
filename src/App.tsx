@@ -3,7 +3,7 @@ import Header from './components/Header';
 import PortfolioOverview from './components/PortfolioOverview';
 import PerformanceMetrics from './components/PerformanceMetrics';
 import StrategyComparison from './components/StrategyComparison';
-import ChartsGrid from './components/ChartsGrid';
+import ReportsSection from './components/ReportsSection';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <Header />
         <PortfolioOverview />
         <PerformanceMetrics />
-        <ChartsGrid />
+        <ReportsSection />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <StrategyComparison />
         </div>
