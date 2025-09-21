@@ -7,6 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Custom utility colors
+        success: '#00FFA7',
+        primary: '#008EFF', 
+        danger: '#EF4444',
+        warning: '#F97316',
         // Extended color palette from image
         yellow: {
           50: '#FFFBEB',
