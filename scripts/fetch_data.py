@@ -10,6 +10,7 @@ import numpy as np
 from datetime import datetime, timedelta, date
 import time
 import json
+import os
 
 # Configuration
 API_KEY = "CG-P48dvmsF8VwaAR68yt274Dvu"
@@ -163,7 +164,9 @@ def save_data(data, filename='crypto_prices.csv'):
         data (pd.DataFrame): Price data
         filename (str): Output filename
     """
-    filepath = f"/Users/mfy/crypto-portfolio-analysis/{filename}"
+    # Ensure data directory exists
+    os.makedirs('data', exist_ok=True)
+    filepath = f"data/{filename}"
     data.to_csv(filepath)
     print(f"Data saved to {filepath}")
 
